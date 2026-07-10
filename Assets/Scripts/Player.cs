@@ -3,8 +3,11 @@ using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] speedMax;
-    PlayerInput playerInput;
+    [SerializeField] PlayerInput playerInput;
+    [SerializeField] float accel;
+    Rigidbody rb;
+    [SerializeField] float rotateSpeed;
+    [SerializeField] float jumpSpeed;
     [SerializeField] float groundNormalYMin = 0.7f;
     bool isGrounded;
     [SerializeField] float groundDamping = 8f;
@@ -15,20 +18,26 @@ public class Player : MonoBehaviour
     {
         playerInput = GetComponent<PlayerInput>();
         rb.sleepThreshold = -1;
+        rb = GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        var cameraDir = playerInput.camera.transform.forward;
-        var cameraRight = playerInput.camera.transform.right;
+        var accelVec = playerInput.actions["Move"].ReadValue<Vector2>();
 
-        var moveVec3D =
-            cameraDir.y = 0;
+        var cameraDir = playerInput.camera.transform.forward;
+        cameraDir.y = 0;
         cameraDir = cameraDir.normalized;
 
-        if (playerInput.actions["Jump"].WasPressedThisFrame()
-          && isGrounded)
+        var cameraRight = playerInput.camera.transform.right;
+
+        var accelVec3D =
+            cameraDir * accelVec.y * accel
+            + cameraRight * accelVec.x * accel;
+        rb.AddForce(accelVec3D, ForceMode.Acceleration);
+
+        if (playerInput.actions["Jump"].WasPressedThisFrame())
         {
             Vector3 jumpVec = new Vector3(0, jumpSpeed, 0);
             rb.AddForce(jumpVec, ForceMode.VelocityChange);

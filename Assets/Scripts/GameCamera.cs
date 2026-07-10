@@ -1,8 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-float pitch;
-float yaw;
 
 public class GameCamera : MonoBehaviour
 {
@@ -11,6 +9,9 @@ public class GameCamera : MonoBehaviour
     [SerializeField] Vector3 offset;
     [SerializeField] float targetDistance;
     [SerializeField] float rotateSpeed;
+
+    float pitch;
+    float yaw;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
